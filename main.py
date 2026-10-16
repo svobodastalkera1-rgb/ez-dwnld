@@ -1,8 +1,9 @@
 import asyncio
 from pathlib import Path
-from test import get_url
+from browser import get_url
 from dwnld import dwnld_video
 from read_json import rd_js
+from right_filename import clear_filename
 
 
 async def main():
@@ -14,18 +15,27 @@ async def main():
         name = video.get("name")
         link = video.get("link")
 
-        folder = Path("download") / str(section)
+        safe_name = clear_filename(name)
+
+        folder = Path(r"D:\Conference") / str(section)
         folder.mkdir(parents = True, exist_ok = True)
 
-        master_url = await get_url(link)
+        output_path = folder / safe_name
+        done_file = folder / f"{safe_name}.done"
 
-        dwnld_video(master_url, folder / name)          
+        if done_file.exists():
+            continue
 
-    master_url = await get_url()
+        try:
+            master_url = await get_url(link)
 
-    dwnld_video(
-        master_url,
-        folder / name
-    )
+            dwnld_video(master_url, output_path) 
+
+            done_file.touch()         
+
+        except Exception as error:
+            print(error)
+
+            continue
 
 asyncio.run(main())
