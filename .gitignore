@@ -1,1 +1,4 @@
 links.json
+__pycache__
+browser_profile/
+download/
