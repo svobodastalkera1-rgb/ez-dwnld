@@ -10,6 +10,10 @@ def dwnld_video(master_url, output_path):
 
         "socket_timeout": 60,
 
+        "continued1": True,
+
+        "nopart": False,
+
         "skip_unavailable_fragments": True,
     }
 
